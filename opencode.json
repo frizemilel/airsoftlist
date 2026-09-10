@@ -1,0 +1,168 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "username": "airsoftlist",
+  "model": "anthropic/claude-sonnet-4-6",
+  "default_agent": "architect",
+  "instructions": ["AGENTS.md"],
+  "skills": {
+    "paths": [".opencode/skills"]
+  },
+  "agent": {
+    "architect": {
+      "description": "Site architect: designs information architecture, routing, data model, and SEO/security strategy before any code is written.",
+      "mode": "primary",
+      "model": "anthropic/claude-sonnet-4-6",
+      "permission": {
+        "edit": "deny",
+        "bash": "ask"
+      }
+    },
+    "frontend-dev": {
+      "description": "SEO-first frontend developer: builds fast, accessible, crawlable UI with semantic HTML, structured data, and Core Web Vitals in mind.",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-6",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "backend-dev": {
+      "description": "Secure backend developer: builds APIs and server logic with input validation, auth, rate limiting, and secure defaults.",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-6",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "seo-specialist": {
+      "description": "SEO specialist: audits pages for indexability, meta tags, structured data, internal linking, Core Web Vitals, and crawl budget.",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-6",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "security-auditor": {
+      "description": "Security auditor: reviews code for OWASP Top 10 vulnerabilities, secrets exposure, dependency risks, and insecure defaults.",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-6",
+      "permission": {
+        "edit": "deny",
+        "bash": "ask"
+      }
+    },
+    "perf-engineer": {
+      "description": "Performance engineer: measures and optimizes Core Web Vitals, bundle size, image handling, caching, and server response times.",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-6",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "devops": {
+      "description": "DevOps engineer: handles GitHub integration, CI/CD pipelines, deployment, server configuration, and infrastructure as code.",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-6",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "qa-engineer": {
+      "description": "QA engineer: designs and maintains automated tests, ensures reliability, regression prevention, and zero-downtime releases.",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-6",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    },
+    "designer": {
+      "description": "UX/UI designer: creates wireframes, mockups, design systems, and visual specs ensuring accessibility, brand consistency, and user-centered design.",
+      "mode": "subagent",
+      "model": "anthropic/claude-sonnet-4-6",
+      "permission": {
+        "edit": "allow",
+        "bash": "ask"
+      }
+    }
+  },
+  "command": {
+    "seo-check": {
+      "description": "Run a full SEO audit on the current site: indexability, metadata, structured data, and Core Web Vitals.",
+      "agent": "seo-specialist",
+      "template": "Audit the site at $ARGUMENTS for SEO issues. Check: robots.txt, sitemap.xml, meta tags (title, description, canonical), structured data (Schema.org), heading hierarchy, internal linking, image alt text, Core Web Vitals (LCP, CLS, INP), and crawlability. Report issues with file paths and line numbers, and propose concrete fixes."
+    },
+    "security-scan": {
+      "description": "Run a security audit: OWASP Top 10, secrets, dependency risks, and insecure patterns.",
+      "agent": "security-auditor",
+      "template": "Perform a security audit of $ARGUMENTS. Check for: OWASP Top 10 vulnerabilities, hardcoded secrets/credentials, SQL injection, XSS, insecure authentication, sensitive data exposure, broken access control, security misconfiguration, outdated dependencies, and XML/XXE injection. Report each finding with severity, file path, line number, and remediation."
+    },
+    "perf-baseline": {
+      "description": "Measure current Core Web Vitals and performance baseline.",
+      "agent": "perf-engineer",
+      "template": "Measure the performance baseline for $ARGUMENTS. Analyze: LCP, CLS, INP, FCP, TBT, bundle size, image sizes, caching headers, and server response time. Provide a prioritized list of optimizations with expected impact."
+    },
+    "deploy": {
+      "description": "Deploy the current site to production (GitHub → CI/CD → Server).",
+      "agent": "devops",
+      "template": "Deploy the current site to production. Steps: 1) Ensure all checks pass (seo-check, security-scan, perf-baseline, tests). 2) Push to main branch. 3) Trigger CI/CD pipeline. 4) Verify deployment (check live site, sitemap, robots.txt, security headers). 5) Report deployment status."
+    },
+    "ci-setup": {
+      "description": "Set up CI/CD pipeline for the project (GitHub Actions).",
+      "agent": "devops",
+      "template": "Set up CI/CD pipeline for Airsoftlist.ru. Create .github/workflows/ci.yml that: 1) Runs on every PR and push to main. 2) Installs dependencies (npm ci). 3) Runs lint, tests, build. 4) Runs seo-check, security-scan, perf-baseline. 5) Deploys preview environment (Vercel/Netlify) for PRs. 6) Deploys production on merge to main. 7) Uses GitHub Secrets for environment variables. 8) Fails if any check fails. Provide the complete workflow file."
+    },
+    "deploy-check": {
+      "description": "Verify production deployment: SEO, security, and performance checks on live site.",
+      "agent": "devops",
+      "template": "Verify production deployment for Airsoftlist.ru. Run: 1) seo-check on live site (sitemap, robots, meta tags, structured data). 2) security-scan on live site (security headers, dependencies). 3) perf-baseline on live site (Core Web Vitals). 4) Check uptime and response time. 5) Verify sitemap.xml is up to date. 6) Verify canonical URLs point to correct domain. Report any issues found."
+    },
+    "test": {
+      "description": "Run all unit and integration tests with coverage report.",
+      "agent": "qa-engineer",
+      "template": "Run all unit and integration tests for Airsoftlist.ru. Steps: 1) Run Vitest for all tests. 2) Generate coverage report. 3) Report: total tests, passed/failed/skipped, coverage percentage by file. 4) Fail if coverage < 80% on new code. 5) Fail if any test fails. Report failures with file and line numbers."
+    },
+    "test:e2e": {
+      "description": "Run E2E tests with Playwright, accessibility audit, and visual regression checks.",
+      "agent": "qa-engineer",
+      "template": "Run E2E tests for Airsoftlist.ru. Steps: 1) Build the site in test mode. 2) Run Playwright E2E tests for all critical user journeys (home, category filter, search, product page, cart, auth, admin). 3) Run accessibility audit with axe-core on every page. 4) Run visual regression (screenshot comparison) for critical pages. 5) Cross-browser testing: Chrome, Firefox, Safari. 6) Mobile responsive testing. 7) Report pass/fail for each test, accessibility violations, visual diffs, and coverage summary."
+    },
+    "test:perf": {
+      "description": "Run performance audit using Lighthouse CI to verify performance budgets.",
+      "agent": "qa-engineer",
+      "template": "Run performance audit for Airsoftlist.ru. Steps: 1) Run Lighthouse CI against the built site. 2) Check performance budgets: LCP < 2.5s, CLS < 0.1, INP < 200ms, FCP < 1.8s, TBT < 200ms, Speed Index < 3.5s. 3) Check accessibility and best practices scores. 4) Report score for each category, budget violations, and specific recommendations."
+    },
+    "test:debug": {
+      "description": "Debug a failing test to find the root cause and fix it.",
+      "agent": "qa-engineer",
+      "template": "Debug the failing test for $ARGUMENTS. Steps: 1) Run the specific failing test in verbose mode. 2) Capture the full error output and stack trace. 3) Identify the root cause: logic error, test issue, mock problem, or API/database issue. 4) Provide the fix and updated test code. 5) Re-run to confirm the fix."
+    }
+  },
+  "permission": {
+    "edit": "ask",
+    "bash": {
+      "git *": "allow",
+      "gh *": "allow",
+      "rm *": "deny",
+      "npm *": "allow",
+      "npx *": "allow",
+      "docker *": "allow",
+      "curl *": "allow",
+      "ssh *": "ask",
+      "scp *": "ask",
+      "rsync *": "ask",
+      "terraform *": "allow",
+      "ansible *": "allow",
+      "node *": "allow",
+      "pnpm *": "allow",
+      "yarn *": "allow",
+      "vercel *": "allow",
+      "netlify *": "allow",
+      "*": "ask"
+    }
+  }
+}
